@@ -48,11 +48,11 @@ running the model:
 	all the required modules (releaseOutbidModule, utilityModule and valueModule) 
 	in the same directory as the MCA-model.als file.
 	
-	step2: In order to check any specific assertion (such as predefine one "concesus"),
+	step2: In order to check any specific assertion (such as predefine one "consensus"),
 	from the "Execute" menu, the corresponding assertion can be selected and checked.
 	
 	step3: If and assertion/model has any counter example/instance, it can be
-	depicted using the "Show" bottun. In case that the a counter example/instance does
+	depicted using the "Show" button. In case that the a counter example/instance does
 	not exist the user will be notified that "No counter example exists" on the message
 	panel on the right.
 
