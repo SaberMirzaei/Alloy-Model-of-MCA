@@ -24,14 +24,14 @@ is used the existance of the state that a distibuted auction system based
 on an MCA protocol reaches consensus (all the agents/physical nodes 
 agree on the winners of the services/ virtual nodes):
 
-  assert consensus{
-	  1(#(netState) >= 10) implies (consensusPred[])
-  }
+	assert consensus{
+		1(#(netState) >= 10) implies (consensusPred[])
+	}
 
 This assertion is checked in the scope of four agents/physical nodes and
 one service/virtual nodes using the following Alloy command:
 
-  check consensus for 10 but exactly 4 pnode, exactly 1 vnode
+	check consensus for 10 but exactly 4 pnode, exactly 1 vnode
 
 
 RUNNING AND REQUIREMENTS
@@ -42,6 +42,7 @@ You can download Alloy model checker from:
 http://alloy.mit.edu/alloy
 
 running the model: 
+
 	step1: Starting with executing the Alloy model checker and 
 	openning The model's base module (namely MCA-model.als). Make sure to have
 	all the required modules (releaseOutbidModule, utilityModule and valueModule) 
