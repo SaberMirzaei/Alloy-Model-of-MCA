@@ -29,7 +29,7 @@ RUNNING AND REQUIREMENTS
 ==================
 Installation and Running Instructions
 
-To run any Alloy model, JRE (link to the download page?) and the Alloy model checker need to be installed.
+To run any Alloy model, JRE and the Alloy model checker need to be installed.
 
 The Alloy model checker can be downloaded from: http://alloy.mit.edu/alloy
 
