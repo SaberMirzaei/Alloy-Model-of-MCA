@@ -25,9 +25,8 @@ one service/virtual nodes using the following Alloy command:
 	check consensus for 10 but exactly 4 pnode, exactly 1 vnode
 
 
-RUNNING AND REQUIREMENTS
+INSTALLATION AND RUNNING INSTRUCTIONS
 ==================
-Installation and Running Instructions
 
 To run any Alloy model, JRE and the Alloy model checker need to be installed.
 
