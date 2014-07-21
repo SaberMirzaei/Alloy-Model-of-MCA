@@ -1,4 +1,4 @@
-PROJECT'S OVERVIEW
+OVERVIEW
 ==================
 This package presents a model for Consensus-based Auction (MCA) protocols Using Alloy language. 
 
@@ -27,27 +27,24 @@ one service/virtual nodes using the following Alloy command:
 
 RUNNING AND REQUIREMENTS
 ==================
-In order to be to able run this model, JRE and Alloy model checker are needed.
+Installation and Running Instructions
 
-You can download Alloy model checker from:
-http://alloy.mit.edu/alloy
+To run any Alloy model, JRE (link to the download page?) and the Alloy model checker need to be installed.
 
-running the model: 
+The Alloy model checker can be downloaded from: http://alloy.mit.edu/alloy
 
-	step1: Starting with executing the Alloy model checker and 
-	openning The model's base module (namely MCA-model.als). Make sure to have
+Running 
+
+	Step1: Start with executing the Alloy model checker and 
+	open the model's base module MCA-model.als. Make sure that
 	all the required modules (releaseOutbidModule, utilityModule and valueModule) 
-	in the same directory as the MCA-model.als file.
-	
-	step2: In order to check any specific assertion (such as predefine one "consensus"),
-	from the "Execute" menu, the corresponding assertion can be selected and checked.
-	
-	step3: If and assertion/model has any counter example/instance, it can be
-	depicted using the "Show" button. In case that a counter example/instance does
+	are in the same directory as the MCA-model.als file.
+
+	Step2: In order to check a specific assertion select
+	from the "Execute" menu, the corresponding assertion name (e.g., "consensus").
+
+	Step3: If an assertion finds a counter example, this can be
+	seen using the "Show" button. In case that such counter example does
 	not exist the user will be notified that "No counter example exists" on the message
 	panel on the right.
 
-PEOPLE
-==================
-Saber Mirzaei and
-Flavio Esposito
