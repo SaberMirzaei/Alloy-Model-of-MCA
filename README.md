@@ -43,7 +43,7 @@ running the model:
 	from the "Execute" menu, the corresponding assertion can be selected and checked.
 	
 	step3: If and assertion/model has any counter example/instance, it can be
-	depicted using the "Show" button. In case that the a counter example/instance does
+	depicted using the "Show" button. In case that a counter example/instance does
 	not exist the user will be notified that "No counter example exists" on the message
 	panel on the right.
 
