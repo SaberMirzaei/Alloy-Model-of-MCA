@@ -6,7 +6,7 @@ open util/ordering[netState]
 one sig NULL{}
 //Physical Node
 sig pnode{
-	pcp: one value, // cpacity of a physical node
+	pcp: one value, // capacity of a physical node
 	pid: one value, 
 	initBidTriples:set bidTriple,
 	pconnections: some pnode,
@@ -108,7 +108,7 @@ fact {all initB : pnode.initBidTriples| valL[initB.bidTriple_t, first.time]}
 
 
 // vid must be unique
-fact{all disj vn1,  vn2: vnode | /*vn1.vid > 0 and */vn1.vid != vn2.vid   }
+fact{all disj vn1,  vn2: vnode | vn1.vid != vn2.vid   }
 
 
 
@@ -128,8 +128,7 @@ fact {all s: netState, s': s.next | one m:message | messaging[s, s', m]}
 
 fact {all s: netState |
 	#(s.bidVectors) = #(pnode) and 
-	(s.bidVectors.bvPn = pnode) /*and 
-	s.time > 0*/
+	(s.bidVectors.bvPn = pnode) 
 }
 
 
@@ -355,9 +354,7 @@ all v: vnode |
 }
 
 
-pred outBidUpdateAndRebroadcast(s, s': netState, v: vnode, m: message){
-//	(cheat[s,s',v,m] and !fairPlay[s,s',v,m] )
-//or 
+pred outBidUpdateAndRebroadcast(s, s': netState, v: vnode, m: message){ 
 	(fairPlay[s,s',v,m] )//and !cheat[s,s',v,m] )
 }
 
@@ -377,23 +374,6 @@ pred updateAndRebroadcast(s, s': netState, v: vnode, m: message){
 		(findBidTriple[bv.bvBidTriples, v] =  findBidTriple[m.mBidTriples, v]) 
 	)
 }
-
-
-/*pred cheat(s, s': netState, v: vnode, m: message){
-(one bv: s'.bidVectors | (bv.bvPn = m.mReceiver) 
-	and (v.(bv.winners) =  m.mReceiver) 
-	and (v.(bv.winnerBids) =  add[v.(m.msgWinnerBids),1] ) 
-	and (v.(bv.bidTimes) =  add[v.(m.msgBidTimes),1])
-) 
-	and
- (all c:  m.mReceiver.pconnections   | 
-	one m': message | 
-		(m'.mSender = m.mReceiver) 
-		and (m'.mReceiver = c ) 
-		and (m'.mWinners = findBidVecByPn[s'.bidVectors, m.mReceiver].winners) 
-		and (m'.msgWinnerBids = findBidVecByPn[s'.bidVectors, m.mReceiver].winnerBids) 
-		and (m'.msgBidTimes = findBidVecByPn[s'.bidVectors, m.mReceiver].bidTimes) and (m' in s'.buffMsgs))
-}*/
 
 
 pred updateTimeAndRebroadcast(s, s': netState, v: vnode, m: message){
