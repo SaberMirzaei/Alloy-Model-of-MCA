@@ -47,3 +47,14 @@ Running
 	not exist the user will be notified that "No counter example exists" on the message
 	panel on the right.
 
+
+PUBLICATIONS
+==================
+Mirzaei, Saber; Esposito, Flavio.
+An Alloy Verification Model for Consensus-Based Auction Protocols,
+July 15, 2014. Tecnical Report BU-CS-TR-2014-004 (under submission)
+[PDF][PS][Abstract]
+
+[References]
+Boston University Alloy Project. http://csr.bu.edu/alloy
+MIT Alloy Project. http://alloy.mit.edu/alloy/
