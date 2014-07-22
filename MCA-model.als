@@ -380,7 +380,11 @@ pred updateAndRebroadcast(s, s': netState, v: vnode, m: message){
 
 
 /*pred cheat(s, s': netState, v: vnode, m: message){
-(one bv: s'.bidVectors | (bv.bvPn = m.mReceiver) and (v.(bv.winners) =  m.mReceiver) and (v.(bv.winnerBids) =  add[v.(m.msgWinnerBids),1] ) and (v.(bv.bidTimes) =  add[v.(m.msgBidTimes),1])) /// make sure about the time
+(one bv: s'.bidVectors | (bv.bvPn = m.mReceiver) 
+	and (v.(bv.winners) =  m.mReceiver) 
+	and (v.(bv.winnerBids) =  add[v.(m.msgWinnerBids),1] ) 
+	and (v.(bv.bidTimes) =  add[v.(m.msgBidTimes),1])
+) 
 	and
  (all c:  m.mReceiver.pconnections   | 
 	one m': message | 
@@ -392,7 +396,7 @@ pred updateAndRebroadcast(s, s': netState, v: vnode, m: message){
 }*/
 
 
-pred updateTimeAndRebroadcast(s, s': netState, v: vnode, m: message){///////make sure about the povalue that time must be updated to
+pred updateTimeAndRebroadcast(s, s': netState, v: vnode, m: message){
 	(one bv: s'.bidVectors | 
 		(bv.bvPn = m.mReceiver) and 
 		(findBidTriple[bv.bvBidTriples, v].bidTriple_w =  findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w) and 
