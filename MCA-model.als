@@ -6,13 +6,13 @@ open util/ordering[netState]
 one sig NULL{}
 //Physical Node
 sig pnode{
-				pcp: one value, // cpacity of a physical node
-				pid: one value, 
-				initBidTriples:set bidTriple,
-				pconnections: some pnode,
-				p_T: one Int,
-				P_U: one utility,
-				P_RO: one release_outbid
+	pcp: one value, // cpacity of a physical node
+	pid: one value, 
+	initBidTriples:set bidTriple,
+	pconnections: some pnode,
+	p_T: one Int,
+	P_U: one utility,
+	P_RO: one release_outbid
 }
 
 //VIRTUAL Node
@@ -25,9 +25,9 @@ one sig slice{vns: set vnode, sInitiator: one pnode}
 
 // A message from a pnode to another about it's view
 sig message{
-						mSender: one pnode,
-						mReceiver: one pnode,
-						mBidTriples: set bidTriple
+	mSender: one pnode,
+	mReceiver: one pnode,
+	mBidTriples: set bidTriple
 }
 
 // bidVector is the image of pnode bvPn winners represents the pnode that is the assumed winner, 
@@ -66,10 +66,6 @@ fact{all bt: bidTriple |
 	(bt.bidTriple_w = NULL implies (bt.bidTriple_t = zero and bt.bidTriple_b = zero)) 
 }
 
-// the sum of initial bids and bidvectors must be less that the capacity of the node
-//fact {all bv:bidVector | (sum v: vnodesWonBy[bv] | findBidTriple[bv.bvBidTriples, v].bidTriple_b) <= bv.bvPn.pcp}
-//fact {all bv:bidVector | valSum[ v: vnodesWonBy[bv] | findBidTriple[bv.bvBidTriples, v].bidTriple_b] <= bv.bvPn.pcp}
-
 //submodularity  initially and in each bidvector
 fact {
 	all bv:bidVector | 
@@ -78,8 +74,8 @@ fact {
 			all disj v1, v2: vnodesWonBy[bv] | 
 				valL[v1.vid, v2.vid] implies
 				(
-					(valL[findBidTriple[bv.bvBidTriples, v1].bidTriple_t, findBidTriple[bv.bvBidTriples, v2].bidTriple_t]) and 
-					(valGE[findBidTriple[bv.bvBidTriples, v1].bidTriple_b, findBidTriple[bv.bvBidTriples, v2].bidTriple_b])
+				(valL[findBidTriple[bv.bvBidTriples, v1].bidTriple_t, findBidTriple[bv.bvBidTriples, v2].bidTriple_t]) and 
+				(valGE[findBidTriple[bv.bvBidTriples, v1].bidTriple_b, findBidTriple[bv.bvBidTriples, v2].bidTriple_b])
 				)
 			)
 	)
@@ -118,9 +114,9 @@ fact{all disj vn1,  vn2: vnode | /*vn1.vid > 0 and */vn1.vid != vn2.vid   }
 
 // message m, should containd the view m.mSender for all the vnodes
 fact{all m:message |
-			#(m.mBidTriples) = #(vnode) and
-			m.mBidTriples.bidTriple_v = vnode and 
-			m.mSender != m.mReceiver
+	#(m.mBidTriples) = #(vnode) and
+	m.mBidTriples.bidTriple_v = vnode and 
+	m.mSender != m.mReceiver
 }
 
 //don't have dangling messages
@@ -131,26 +127,27 @@ fact {all s: netState, s': s.next | one m:message | messaging[s, s', m]}
 
 
 fact {all s: netState |
-			#(s.bidVectors) = #(pnode) and 
-			(s.bidVectors.bvPn = pnode) /*and 
-			s.time > 0*/
+	#(s.bidVectors) = #(pnode) and 
+	(s.bidVectors.bvPn = pnode) /*and 
+	s.time > 0*/
 }
 
 
 //the bid vector of the first state should contain the initial view of the all pnodes
 fact {all b: first.bidVectors |
-			 b.bvBidTriples = b.bvPn.initBidTriples and
-			 no b.excludedVN
+	b.bvBidTriples = b.bvPn.initBidTriples and
+	no b.excludedVN
 }
 
 // If a Pnode is the slice initiator then there should be some buffered messages for each one
 // of the connections orifinating from that pnode
 fact { all p:pnode | 
-			p in slice.sInitiator.pconnections implies (one m:first.buffMsgs | 
-														m.mReceiver = p and 
-														m.mSender = slice.sInitiator and 
-														m.mBidTriples = slice.sInitiator.initBidTriples
-														)
+		p in slice.sInitiator.pconnections 
+			implies (one m:first.buffMsgs | 
+							m.mReceiver = p and 
+							m.mSender = slice.sInitiator and 
+							m.mBidTriples = slice.sInitiator.initBidTriples
+					)
 }
 
 //and there should not be other msgs (ref. previous fact)
@@ -225,73 +222,60 @@ pred updateAndRebid(s,s':netState, v: vnode, m:message){
 
 //check the updates for the vnodes that other pnodes are winning
 pred checkRestOfVnodes(s,s':netState, v: vnode, m:message){
-			(	findBidTriple[m.mBidTriples, v].bidTriple_w  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w   
-					and ( findBidTriple[m.mBidTriples, v].bidTriple_b  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b ) 
-					and ( valLE[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )) 
-			implies (doNothing[s, s', v, m])
+	(	findBidTriple[m.mBidTriples, v].bidTriple_w  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w   
+		and ( findBidTriple[m.mBidTriples, v].bidTriple_b  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b ) 
+		and ( valLE[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )) 
+	implies (doNothing[s, s', v, m])
 			
-			//this rule covers all the tie breaking situations -> R!=S and R!={Null+s} and S!={Null+r}
-			else 			( !( findBidTriple[m.mBidTriples, v].bidTriple_w  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w ) 
-					and !( findBidTriple[m.mBidTriples, v].bidTriple_w  in (m.mReceiver + NULL)) 
-					and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mSender + NULL)) 
-					and ( findBidTriple[m.mBidTriples, v].bidTriple_b  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b )  
-					and ( valL[findBidTriple[m.mBidTriples, v].bidTriple_w .pid, findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w .pid])  ) 
-			implies (updateAndRebroadcast[s, s', v, m])
+	//this rule covers all the tie breaking situations -> R!=S and R!={Null+s} and S!={Null+r}
+	else 			( !( findBidTriple[m.mBidTriples, v].bidTriple_w  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w ) 
+		and !( findBidTriple[m.mBidTriples, v].bidTriple_w  in (m.mReceiver + NULL)) 
+		and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mSender + NULL)) 
+		and ( findBidTriple[m.mBidTriples, v].bidTriple_b  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b )  
+		and ( valL[findBidTriple[m.mBidTriples, v].bidTriple_w .pid, findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w .pid])  ) 
+	implies (updateAndRebroadcast[s, s', v, m])
 			
-			else			( !( findBidTriple[m.mBidTriples, v].bidTriple_w  in (m.mReceiver+m.mSender+NULL)) 
-					and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mSender + NULL) )  ) 
-			implies (updateAndRebroadcast[s, s', v, m])
+	else			( !( findBidTriple[m.mBidTriples, v].bidTriple_w  in (m.mReceiver+m.mSender+NULL)) 
+		and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mSender + NULL) )  ) 
+	implies (updateAndRebroadcast[s, s', v, m])
 			
-			else 			( !( findBidTriple[m.mBidTriples, v].bidTriple_w  in (m.mReceiver+m.mSender+NULL)) 
-					and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mReceiver +m.mSender + findBidTriple[m.mBidTriples, v].bidTriple_w  + NULL) )  
-					and  !( findBidTriple[m.mBidTriples, v].bidTriple_b  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b ) 
-					and ( valGE[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )  ) 
-			implies (updateAndRebroadcast[s, s', v, m])
+	else 			( !( findBidTriple[m.mBidTriples, v].bidTriple_w  in (m.mReceiver+m.mSender+NULL)) 
+		and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mReceiver +m.mSender + findBidTriple[m.mBidTriples, v].bidTriple_w  + NULL) )  
+		and  !( findBidTriple[m.mBidTriples, v].bidTriple_b  = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b ) 
+		and ( valGE[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )  ) 
+	implies (updateAndRebroadcast[s, s', v, m])
 
-
-
-			else 			( ( (findBidTriple[m.mBidTriples, v].bidTriple_w + findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w)  in (NULL+m.mSender) ) 
-					and (findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w != findBidTriple[m.mBidTriples, v].bidTriple_w )  ) 
-			implies (updateAndRebroadcast[s, s', v, m])
+	else 			( ( (findBidTriple[m.mBidTriples, v].bidTriple_w + findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w)  in (NULL+m.mSender) ) 
+		and (findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w != findBidTriple[m.mBidTriples, v].bidTriple_w )  ) 
+	implies (updateAndRebroadcast[s, s', v, m])
 
 	
-			else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = NULL ) 
-					and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mReceiver +m.mSender + NULL) )  
-					and ( valG[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] ) ) 
-			implies (updateAndRebroadcast[s, s', v, m])
+	else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = NULL ) 
+		and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mReceiver +m.mSender + NULL) )  
+		and ( valG[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] ) ) 
+		implies (updateAndRebroadcast[s, s', v, m])
 
+	else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mSender) 
+		and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  = m.mSender)  
+		and ( valG[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )  ) 
+	implies (updateAndRebroadcast[s, s', v, m])
 
+	else 			(  ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mSender) 
+		and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mReceiver +m.mSender + NULL) )  
+		and  ( valG[findBidTriple[m.mBidTriples, v].bidTriple_b , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b] 
+				or 
+			valG[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )  ) 
+	implies (updateAndRebroadcast[s, s', v, m])
 
+	else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mReceiver) 
+		and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  = m.mSender)) 
+	implies (resetAndRebroadcastStar[s, s', v, m])
 
-			else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mSender) 
-					and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  = m.mSender)  
-					and ( valG[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )  ) 
-			implies (updateAndRebroadcast[s, s', v, m])
-
-
-
-			else 			(  ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mSender) 
-					and !( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  in (m.mReceiver +m.mSender + NULL) )  
-					and  ( valG[findBidTriple[m.mBidTriples, v].bidTriple_b , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_b] 
-							or 
-							valG[findBidTriple[m.mBidTriples, v].bidTriple_t , findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_t] )  ) 
-			implies (updateAndRebroadcast[s, s', v, m])
-
-
-
-
-
-			else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mReceiver) 
-					and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  = m.mSender)) 
-			implies (resetAndRebroadcastStar[s, s', v, m])
-
-
-			else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mReceiver) 
-					and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  = NULL)) 
-			implies (rebroadcastStar[s, s', v, m]) 
-			
-			
-			else			rebroadcast[s, s', v, m]
+	else 			( ( findBidTriple[m.mBidTriples, v].bidTriple_w  = m.mReceiver) 
+		and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v].bidTriple_w  = NULL)) 
+	implies (rebroadcastStar[s, s', v, m]) 
+	
+	else			rebroadcast[s, s', v, m]
 }
 
 // release or rebid
@@ -326,7 +310,7 @@ pred outBid(s: netState, v: vnode, m: message){
 				and ( findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v'].bidTriple_w = m.mReceiver)  
 				and ( valG[findBidTriple[m.mBidTriples, v'].bidTriple_b, findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v'].bidTriple_b] 
 					or (( findBidTriple[m.mBidTriples, v'].bidTriple_b = findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v'].bidTriple_b)  
-					and ( valL[findBidTriple[m.mBidTriples, v'].bidTriple_w.pid, findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v'].bidTriple_w.pid])  )))  
+				and ( valL[findBidTriple[m.mBidTriples, v'].bidTriple_w.pid, findBidTriple[findBidVecByPn[s.bidVectors, m.mReceiver].bvBidTriples, v'].bidTriple_w.pid])  )))  
 	implies (valG[v'.vid, v.vid])  )
 }
 
