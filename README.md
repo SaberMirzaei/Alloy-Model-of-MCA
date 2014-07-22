@@ -53,7 +53,7 @@ PUBLICATIONS
 Mirzaei, Saber; Esposito, Flavio.
 An Alloy Verification Model for Consensus-Based Auction Protocols,
 July 15, 2014. Tecnical Report BU-CS-TR-2014-004 (under submission)
-[PDF](http://www.cs.bu.edu/techreports/pdf/2014-004-alloy-consensus-auction-model.pdf) [PS](http://www.cs.bu.edu/techreports/ps/2014-004-alloy-consensus-auction-model.ps) [Abstract] (http://www.cs.bu.edu/techreports/abstracts/2014-004)
+[[PDF]](http://www.cs.bu.edu/techreports/pdf/2014-004-alloy-consensus-auction-model.pdf) [[PS]](http://www.cs.bu.edu/techreports/ps/2014-004-alloy-consensus-auction-model.ps) [[Abstract]] (http://www.cs.bu.edu/techreports/abstracts/2014-004)
 
 [References]
 Boston University Alloy Project. http://csr.bu.edu/alloy
